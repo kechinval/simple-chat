@@ -69,9 +69,11 @@ export default class Chat extends Component {
                       <ul className="chats" ref="chats">
                         {this.state.messages.map(message => {
                           return (
-                            <li className={`chat ${this.socket.id === message.author ? "right" : "left"}`}>
-                                {message.message}
-                            </li>
+                            <div className={`chat ${this.socket.id === message.author ? "right" : "left"}`}>
+                                <div className='name small text-muted'>{this.socket.id === message.author ? "You" : message.author}<br></br>
+                                <div className="message">{message.message}</div>
+                                </div>
+                            </div>
                           )
                         })}
                       </ul>            
@@ -93,13 +95,13 @@ export default class Chat extends Component {
               <div className="card-footer">
                 <div className="input-group">
                   <input 
-                    id = "text-field"
+                    id="text-field"
                     type="text" 
                     className="form-control" 
                     placeholder="Message..." 
                     aria-describedby="basic-addon2"
                     value={this.state.message} 
-                    onChange={ev => this.setState({message: ev.target.value})} 
+                    onChange={ev => this.setState({message: ev.target.value})}
                   />
                   <div className="input-group-append">
                     <button className="btn btn-link" type="button" onClick={this.state.message.length > 0 ? this.sendMessage : null}>
