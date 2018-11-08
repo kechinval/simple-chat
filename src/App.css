@@ -10,11 +10,15 @@ p {
 }
 
 .chatroom {
-  width: 100%;
   height: 100%;
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 0 8px 0 rgba(0,0,0, 0.3);
+}
+
+.online-list{
+  height: 485px;
+  overflow-y: scroll;
 }
 
 .chatroom .chats {

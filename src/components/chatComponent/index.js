@@ -10,11 +10,20 @@ export default class Chat extends Component {
     super(props)
 
     this.state = {
+      online: [],
       message: '',
       messages: [],
     }
 
     this.socket = io('localhost:5000');
+
+    this.socket.on('online', function(clients){
+      addOnline(clients)
+    })
+
+    const addOnline = clients =>{
+      this.setState({online: clients});
+    }
 
     this.socket.on('RECEIVE_MESSAGE', function(data){
       addMessage(data);
@@ -22,7 +31,6 @@ export default class Chat extends Component {
 
     const addMessage = data => {
       this.setState({messages: [...this.state.messages, data]});
-      console.log(this.state.messages);
     };
 
     this.sendMessage = ev => {
@@ -46,6 +54,7 @@ export default class Chat extends Component {
 
   scrollToBot() {
       ReactDOM.findDOMNode(this.refs.chats).scrollTop = ReactDOM.findDOMNode(this.refs.chats).scrollHeight;
+      ReactDOM.findDOMNode(this.refs.online).scrollTop = ReactDOM.findDOMNode(this.refs.online).scrollHeight;
   }
 
   render() {
@@ -55,18 +64,31 @@ export default class Chat extends Component {
           <div className="col">
             <div className="card">
               <div className="card-body">
-                <div className="chatroom">
-                  <ul className="chats" ref="chats">
-                    {this.state.messages.map(message => {
-                      return (
-                        <li className={`chat ${this.socket.id === message.author ? "right" : "left"}`}>
-                            {message.message}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                  <div id="feedback" className="small" hidden></div>               
-                </div> 
+                <div className="row">
+                  <div className="chatroom col-sm-10">
+                      <ul className="chats" ref="chats">
+                        {this.state.messages.map(message => {
+                          return (
+                            <li className={`chat ${this.socket.id === message.author ? "right" : "left"}`}>
+                                {message.message}
+                            </li>
+                          )
+                        })}
+                      </ul>            
+                    </div> 
+                    <div className="test col-sm-2 online-list">
+                      <p className="text-muted text-center">Online: {this.state.online.length}</p>
+                      <ul className="list-group list-group-flush" ref="online">
+                        {this.state.online.map(client => {
+                          return (
+                            <li className="list-group-item small">
+                                {client}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div> 
+                  </div>
               </div>
               <div className="card-footer">
                 <div className="input-group">
